@@ -9,7 +9,7 @@
       <p class="error_msg">{{this}}</p>
     {{/each}}
   </div>
-
+<!-- client side validation-->
   <form action="/" method="POST">
     Name: <input name="name" type="text" required>
     <br>
@@ -44,7 +44,12 @@
     {{#if this.threatened}}
       <p>This bird is threatened</p>
     {{/if}}
+    <form class="delete_form" action="/deleteBird" method ="POST">
+        <input type ="hidden" name = "_id" value="{{this._id}}">
+        <input class="delete_button" type="submit" name="delete" value="Delete">
+    </form>
 
+<!--shows date array as unordered list-->
     <p>Dates seen:</p>
     <ul>
     {{#each this.datesSeen}}
@@ -58,7 +63,7 @@
     </ul>
 
     <P>Add new date seen</P>
-
+<!--code to add new date for each bird-->
     <form action="/addDate" method="POST">
       <input name="dateSeen" type="datetime-local" required>
       <input name="_id" type="hidden" value="{{this._id}}">

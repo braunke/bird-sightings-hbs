@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router()
 
 var Bird = require('../models/bird');
+//removes null values, not in database
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -35,10 +36,11 @@ router.post('/', function(req, res, next){
     };
   }
 
-  // Remove non-nested data
+  // Remove non-nested data so no extra data being saved to database
   delete(birdData.nestLocation); delete(birdData.nestMaterials);
 
   // Extract the date, set to Date.now() if not present
+    //make new array element with date and remove dateSeen
   var date = birdData.dateSeen || Date.now();
   birdData.datesSeen = [ date ];  // A 1-element array
   delete(birdData.dateSeen);   // remove dateSeen, don't need
@@ -81,7 +83,7 @@ router.post('/addDate', function(req, res, next){
 
   // Find the bird with the given ID, and add this new date to the datesSeen array
   Bird.findById( req.body._id, function(err, bird) {
-
+//checks for errors
     if (err) {
       return next(err);
     }
@@ -123,6 +125,16 @@ router.post('/addDate', function(req, res, next){
     })
   });
 });
+router.post('/deleteBird', function(req, res, next){
 
+  var id = req.body._id;
+    Bird.findByIdAndRemove(id, function(err){
+    if (err){
+    return next(err);
+    }
+    req.flash('info', 'Deleted');
+    return res.redirect('/')
+})
+});
 
 module.exports = router;
