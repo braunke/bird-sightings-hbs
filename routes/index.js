@@ -136,5 +136,32 @@ router.post('/deleteBird', function(req, res, next){
     return res.redirect('/')
 })
 });
+//saves changes to bird
+router.post('/saveBird', function(req, res, next){
+  var id = req.body._id;
+  req.body.nest = {};
+  req.body.nest.location = req.body['nest.location'];
+  req.body.nest.materials = req.body['nest.materials'];
+  delete req.body['nest.location'];
+  delete req.body['nest.materials'];
+  Bird.findByIdAndUpdate(id, req.body, function(err){
+    if(err){
+      return next(err);
+    }
+    res.redirect('/');
+  });
+})
+//separate page for each bird
+router.get('/details/:id', function(req, res, next) {
+    Bird.findById( req.params.id, function(err, bird) {
+        if (err) {
+            return next(err);  // 500 error
+        }
+        if (!bird) {
+            return next();  // Creates a 404 error
+        }
+        res.render('bird_details', { bird: bird } );
+    });
+});
 
 module.exports = router;

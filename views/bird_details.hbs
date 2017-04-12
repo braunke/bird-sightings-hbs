@@ -1,0 +1,47 @@
+<h1>{{bird.name}}</h1>
+<a href="/">Home</a>
+<div class="birdsSeen">
+
+    <h3>All sightings</h3>
+    <form action="/saveBird" method="POST">
+        <input type ="hidden" name = "_id" value="{{bird._id}}">
+        <p>Name: <input type="text" name="name" value="{{bird.name}}"></p>
+        <p>Description: <input type="text" name="description" value="{{bird.description}}"></p>
+        <p>Average eggs laid: <input type="number" name="averageEggsLaid" value="{{bird.averageEggsLaid}}"></p>
+        <p>Nest Location: <input type="text" name="nest.location" value="{{bird.nest.location}}"></p>
+        <p>Nest materials: <input type="text" name="nest.materials" value="{{bird.nest.materials}}"></p>
+        <p>Threatened:
+            <label><input type="radio" name="threatened" value="true" {{#if bird.threatened}}checked{{/if}}> True</label>
+            <label><input type="radio" name="threatened" value="false" {{#unless bird.threatened}}checked{{/unless}}> False</label>
+        </p>
+        <p><input type="submit" value="Save Changes"></p>
+    </form>
+    <form class="delete_form" action="/deleteBird" method ="POST">
+        <input type ="hidden" name = "_id" value="{{bird._id}}">
+        <input class="delete_button" type="submit" name="delete" value="Delete">
+    </form>
+
+        <!--shows date array as unordered list-->
+        <p>Dates seen:</p>
+        <ul>
+            {{#each bird.datesSeen}}
+                <li>
+                    {{dateFormatter this}}
+                </li>
+                <li>{{this}}</li>
+            {{else}}
+                <li>No sightings reported</li>
+            {{/each}}
+        </ul>
+
+        <P>Add new date seen</P>
+        <!--code to add new date for each bird-->
+        <form action="/addDate" method="POST">
+            <input name="dateSeen" type="datetime-local" required>
+            <input name="_id" type="hidden" value="{{bird._id}}">
+            <input name="name" type="hidden" value="{{bird.name}}">
+            <input name="add" type="submit" value="Add new date">
+        </form>
+
+        <hr>
+</div>
